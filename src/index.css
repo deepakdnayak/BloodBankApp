@@ -1,0 +1,10 @@
+/* src/LoginType.css */
+.login-card {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .login-card:hover {
+    transform: scale(1.05);
+  }
+  
