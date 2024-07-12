@@ -11,7 +11,7 @@ const LoginType = () => {
             <div className="row">
                 <div className="col-md-6 d-flex justify-content-center my-3">
                     {/* Hospital Card */}
-                    <Link to="/">
+                    <Link to="/login/hospital">
                         <div className="card p-5 login-card" style={{width: '18rem'}}>
                             <img src={Hospital} className="card-img-top" alt="..."/>
                             <div className="card-body">
@@ -22,7 +22,7 @@ const LoginType = () => {
                 </div>
 
                 <div className="col-md-6 d-flex justify-content-center my-3">
-                    <Link to="/">
+                    <Link to="/login/bloodBank">
                         {/* Blood Bank Card */}
                         <div className="card p-5 login-card" style={{width: '18rem'}}>
                             <img src={BloodBank} className="card-img-top" alt="..."/>

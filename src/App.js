@@ -5,6 +5,7 @@ import Home from './components/Home';
 import About from './components/About';
 import Services from './components/Services';
 import Contact from './components/Contact';
+import LoginBB from './components/LoginBB'
 
 import {
   BrowserRouter as Router,
@@ -24,6 +25,7 @@ function App() {
             <Route exact path="/services" element={<Services />} />
             <Route exact path="/contact" element={<Contact />} />
 
+            <Route exact path="/login/bloodBank" element={<LoginBB/>} />
           </Routes>
       </Router>
     </div>
