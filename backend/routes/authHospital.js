@@ -13,8 +13,10 @@ router.post('/createHUser',[
     body('HUserName',"invalid HName").isLength({min: 5}), // setting domain constraints
     body('HPassword').isLength({min: 5}),
 ], async (req,res)=>{
+    let success = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
+        success = false;
         return res.status(400).json({error: errors.array() });
     }
 
@@ -23,6 +25,7 @@ router.post('/createHUser',[
         
         let hospital = await Hospital.findOne({HUserName: req.body.HUserName})
         if(hospital){
+            success = false;
             return res.status(400).json({error: "User Exists"})
         }
 
@@ -49,7 +52,8 @@ router.post('/createHUser',[
         }
         const authToken = jwt.sign(data, JWT_SECRET);
         // send auth token as responce
-        res.json({authToken})
+        success = true;
+        res.json({success,authToken})
     } 
     catch (error) {
         console.log(error.message);
@@ -66,9 +70,12 @@ router.post('/login',[
 
 ], async (req,res)=>{
 
+    let success = false;
+
     // if errors are found , return bad request
     const errors = validationResult(req);
     if(!errors.isEmpty()){
+        success = false;
         return res.status(400).json({errors: errors.array() })
     }
 
@@ -77,11 +84,13 @@ router.post('/login',[
         
         let Huser = await Hospital.findOne({HUserName})
         if(!Huser){
+            success = false;
             return res.status(400).json({error: "Please try to login with correct credentials"});
         }
 
         const passwordCompare = await bcrypt.compare(HPassword,Huser.HPassword);
         if(!passwordCompare){
+            success = false;
             return res.status(400).json({error: "Please try to login with correct credentials"});
         }
 
@@ -93,7 +102,8 @@ router.post('/login',[
 
         const authToken = jwt.sign(data, JWT_SECRET);
         // send the validated user token as responce
-        res.json({authToken})
+        success = true;
+        res.json({success,authToken})
     } 
     catch (error) {
         console.error(error.message);

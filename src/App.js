@@ -12,23 +12,26 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import BBState from './context/bloodbank/BBState';
 
 function App() {
   return (
-    <div>
-      <Router>
-        <Navbar/>
+    <>
+      <BBState>
+        <Router>
+          <Navbar />
           <Routes>
-            <Route exact path="/" element={<Home/>} />
+            <Route exact path="/" element={<Home />} />
             <Route exact path="/login" element={<LoginType />} />
-            <Route exact path="/about" element={<About/>} />
+            <Route exact path="/about" element={<About />} />
             <Route exact path="/services" element={<Services />} />
             <Route exact path="/contact" element={<Contact />} />
 
-            <Route exact path="/login/bloodBank" element={<LoginBB/>} />
+            <Route exact path="/login/bloodBank" element={<LoginBB />} />
           </Routes>
-      </Router>
-    </div>
+        </Router>
+      </BBState>
+    </>
   );
 }
 

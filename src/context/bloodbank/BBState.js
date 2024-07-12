@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import BBContext from "./BBContext";
 
 const BBState = (props) => {
@@ -9,7 +10,7 @@ const BBState = (props) => {
 
     const setAT = (AT) => {
         console.log("AT = " + AT);
-        setAuthenticationToken(AT)
+        setAuthenticationToken(AT);
     }
 
     useEffect(() => {
@@ -47,3 +48,5 @@ const BBState = (props) => {
     )
 
 }
+
+export default BBState;

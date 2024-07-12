@@ -1,12 +1,44 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import RightImage from '../images/login.jpg';
 import UserLogo from '../images/user.jpg';
+import BBContext from '../context/bloodbank/BBContext';
+import { useNavigate } from 'react-router-dom';
 
+const Login = (props) => {
 
-const Login = () => {
-
-    const context = useContext();
+    const context = useContext(BBContext);
     const { setAT } = context;
+
+    const [credentials, setCredentials] = useState({BBUserName: "", BBPassword: ""});
+    let navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // prevent page reload
+
+        const responce = await fetch("http://localhost:5000/api/authBloodBank/login",{
+            method: 'POST',
+
+            headers : {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({BBUserName: credentials.BBUserName, BBPassword: credentials.BBPassword }),
+        });
+        const json = await responce.json();
+        console.log(json);
+
+        if(json.success){
+            setAT(json.authToken);
+            navigate("/")
+        }
+        else {
+            console.log("Invalid Credentials");
+        }
+    }
+
+
+    const onChange = (e) => {
+        setCredentials({...credentials, [e.target.name]: e.target.value })
+    }
 
     return (
         <div className="container">
@@ -15,18 +47,18 @@ const Login = () => {
                     <img className="img-fluid" src={RightImage} alt="Imageright" />
                 </div>
                 <div className="col">
-                    <form className="container p-5">
+                    <form className="container p-5" onSubmit={handleSubmit}>
                         <div className="text-center">
                             <img src={UserLogo} alt="UserLogo" />
                             <p className="fs-4">Blood Bank Login</p>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="username" className="form-label">User Name</label>
-                            <input type="email" className="form-control" name="username" id="username" aria-describedby="emailHelp" />
+                            <label htmlFor="BBUserName" className="form-label">User Name</label>
+                            <input type="text" className="form-control" name="BBUserName" id="BBUserName" aria-describedby="emailHelp" value={credentials.BBUserName} onChange={onChange} />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="password" className="form-label">Password</label>
-                            <input type="password" className="form-control" id="password" name="password" />
+                            <label htmlFor="BBPassword" className="form-label">Password</label>
+                            <input type="password" className="form-control" id="BBPassword" name="BBPassword" value={credentials.BBPassword} onChange={onChange} />
                         </div>
                         <button type="submit" className="btn btn-primary w-100">LOGIN</button>
                     </form>
@@ -37,30 +69,3 @@ const Login = () => {
 }
 
 export default Login;
-
-/*
-
-<div className="row">
-            <div className="col-md-6 d-none d-lg-block d-flex justify-content-center align-items-center">
-                <img className="img-fluid" src={RightImage} alt="Image" />
-            </div>
-            <div className="col-md-6 d-flex justify-content-center">
-                <form className="container p-5">
-                    <div className="text-center">
-                        <img src={UserLogo} alt="UserLogo" />
-                        <p className="fs-4">Blood Bank Login</p>
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1" className="form-label">User Name</label>
-                        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-                        <input type="password" className="form-control" id="exampleInputPassword1" />
-                    </div>
-                    <button type="submit" className="btn btn-primary w-100">LOGIN</button>
-                </form>
-            </div>
-        </div>
-
-*/

@@ -13,8 +13,10 @@ router.post('/createBBUser',[
     body('BBUserName',"invalid BBName").isLength({min: 5}), // setting domain constraints
     body('BBPassword').isLength({min: 5}),
 ], async (req,res)=>{
+    let success = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
+        success = false;
         return res.status(400).json({error: errors.array() });
     }
 
@@ -23,6 +25,7 @@ router.post('/createBBUser',[
         
         let bloodBank = await BloodBank.findOne({BBUserName: req.body.BBUserName})
         if(bloodBank){
+            success = false;
             return res.status(400).json({error: "User Exists"})
         }
 
@@ -49,7 +52,8 @@ router.post('/createBBUser',[
         }
         const authToken = jwt.sign(data, JWT_SECRET);
         // send auth token as responce
-        res.json({authToken})
+        success = true;
+        res.json({success,authToken})
     } 
     catch (error) {
         console.log(error.message);
@@ -66,6 +70,8 @@ router.post('/login',[
 
 ], async (req,res)=>{
 
+    let success = false;
+
     // if errors are found , return bad request
     const errors = validationResult(req);
     if(!errors.isEmpty()){
@@ -77,11 +83,13 @@ router.post('/login',[
         
         let BBuser = await BloodBank.findOne({BBUserName})
         if(!BBuser){
+            success = false;
             return res.status(400).json({error: "Please try to login with correct credentials 111"});
         }
 
         const passwordCompare = await bcrypt.compare(BBPassword,BBuser.BBPassword);
         if(!passwordCompare){
+            success = false;
             return res.status(400).json({error: "Please try to login with correct credentials 222"});
         }
 
@@ -93,7 +101,8 @@ router.post('/login',[
 
         const authToken = jwt.sign(data, JWT_SECRET);
         // send the validated user token as responce
-        res.json({authToken})
+        success = true;
+        res.json({success,authToken})
     } 
     catch (error) {
         console.error(error.message);
